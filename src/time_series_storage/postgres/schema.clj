@@ -145,7 +145,7 @@
   [stmt fact]
   (->> ((column :counter :decimal :precision 16 :scale 2) stmt)
        second
-       ((column :total :integer))
+       ((column :total :decimal :precision 16 :scale 2))
        second))
 
 (defn make-time-series-table
