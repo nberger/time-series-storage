@@ -143,7 +143,7 @@
 
 (defmethod create-fact-column :average
   [stmt fact]
-  (->> ((column :counter :integer) stmt)
+  (->> ((column :counter :decimal :precision 16 :scale 2) stmt)
        second
        ((column :total :integer))
        second))
