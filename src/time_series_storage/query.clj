@@ -62,13 +62,15 @@
   (apply merge
          (for [[k v] (group-by #(select-keys % (keys (dissoc % :counter :timestamp :total)))
                                rows)]
-           (->> (group-by (partial time-dimension by) v)
-                (map (fn [[k v]]
-                       {(tcoerce/from-string k) (reduce #(merge-with + %1 (select-keys %2 [:counter
-                                                                                           :total]))
-                                                        {:counter 0
-                                                         :total 0}
-                                                        v)}))))))
+           {k (->> (group-by (partial time-dimension by) v)
+                   (map (fn [[k v]]
+                          {(or (tcoerce/from-string k) k)
+                           (reduce #(merge-with + %1 (select-keys %2 [:counter
+                                                                      :total]))
+                                   {:counter 0
+                                    :total 0}
+                                   v)}))
+                   (apply merge))})))
 
 (defmethod collapse :histogram
   [rows by]
@@ -96,13 +98,17 @@
 
 (defn fill-range
   [start finish step data]
-  (if (= :none step)
-    data
-    (apply merge
-           (for [[k series] data]
-             {k (apply merge
-                       (for [date (time-range (tcoerce/from-date start)
-                                              (tcoerce/from-date finish)
-                                              step)]
-                         ;;TODO the filler should be by dimension definition
-                         {(tcoerce/to-date date) (or (get series date) 0)}))}))))
+  (let [filler {:counter 0 :total 0}]
+    (if (= :none step)
+      data
+      (->> (for [[k series] data]
+             {k (for [date (time-range (tcoerce/from-date start)
+                                       (tcoerce/from-date finish)
+                                       step)]
+                  ;;TODO the filler should be by dimension definition
+                  (merge k
+                         (assoc (or (get series date) filler)
+                                :timestamp (tcoerce/to-date date))))})
+           (apply merge)
+           first
+           val))))
