@@ -104,7 +104,7 @@
                   ;;TODO the filler should be by dimension definition
                   (merge k
                          (assoc (or (get series date) filler)
-                                :timestamp (tcoerce/to-date date))))})
+                                :timestamp (tcoerce/to-string date))))})
            (apply merge)
            first
            val))))
