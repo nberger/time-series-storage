@@ -1,4 +1,4 @@
-(defproject org.clojars.nberger/time-series-storage "0.1.7.1"
+(defproject org.clojars.nberger/time-series-storage "0.1.7.2"
   :description "Time Series Storage Library"
   :url "https://github.com/guilespi/time-series-storage"
   :license {:name "Eclipse Public License"
