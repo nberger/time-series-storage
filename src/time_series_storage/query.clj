@@ -8,31 +8,27 @@
   (let [date (tcoerce/from-string (:timestamp row))
         dow (t/day-of-week date)]
     (condp = collapse-by
-      :day (tformat/unparse (tformat/formatters :basic-date-time)
-                            (t/date-time (t/year date)
-                                         (t/month date)
-                                         (t/day date)
-                                         0
-                                         0))
-      :hour (tformat/unparse (tformat/formatters :basic-date-time)
-                             (t/date-time (t/year date)
-                                          (t/month date)
-                                          (t/day date)
-                                          (t/hour date)
-                                          0))
+      :day (t/date-time (t/year date)
+                        (t/month date)
+                        (t/day date)
+                        0
+                        0)
+      :hour (t/date-time (t/year date)
+                         (t/month date)
+                         (t/day date)
+                         (t/hour date)
+                         0)
       :week (let [start-of-week (t/minus- date (t/days (t/day-of-week date)))]
-              (tformat/unparse (tformat/formatters :basic-date-time)
-                               (t/date-time (t/year start-of-week)
-                                            (t/month start-of-week)
-                                            (t/day start-of-week)
-                                            0
-                                            0)))
-      :month (tformat/unparse (tformat/formatters :basic-date-time)
-                              (t/date-time (t/year date)
-                                           (t/month date)
-                                           1
-                                           0
-                                           0))
+              (t/date-time (t/year start-of-week)
+                           (t/month start-of-week)
+                           (t/day start-of-week)
+                           0
+                           0))
+      :month (t/date-time (t/year date)
+                          (t/month date)
+                          1
+                          0
+                          0)
       :none :all)))
 
 ;;TODO: this should be done inside the library with knowledge about
