@@ -63,7 +63,7 @@
                           {(or (tcoerce/from-string k) k)
                            (reduce #(merge-with + %1 (select-keys %2 [:counter
                                                                       :total]))
-                                   {:counter 1
+                                   {:counter 0
                                     :total 0}
                                    v)}))
                    (apply merge))})))
@@ -94,7 +94,7 @@
 
 (defn fill-range
   [start finish step data]
-  (let [filler {:counter 1 :total 0}]
+  (let [filler {:counter 0 :total 0}]
     (if (= :none step)
       data
       (->> (for [[k series] data]
